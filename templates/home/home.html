@@ -10,4 +10,10 @@ Home
 {% for room in rooms %}
 <h5>{{room.name}} / ${{room.price}}</h5>
 {% endfor %}
+<h5>Page {{page}} for {{page_count}}</h5>
+
+{% for i in page_range %}
+<a href="?page={{i}}">{{i}}</a>
+{% endfor %}
+
 {% endblock content %}
