@@ -22,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = "%5s_sd*66bk-dyk4-n$&o-ppu%725-+rr0mtxv_3d*$k33h1&a"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False  # 에러시 노란페이지를 보여줄지 말지(개발모드시 True, 프로덕션모드시 False)
+DEBUG = True  # 에러시 노란페이지를 보여줄지 말지(개발모드시 True, 프로덕션모드시 False)
 
 ALLOWED_HOSTS = []
 
@@ -137,4 +137,4 @@ AUTH_USER_MODEL = "users.User"  # 쟝고유저가아닌 내가만든 유저를 �
 MEDIA_ROOT = os.path.join(BASE_DIR, "uploads")  # 사진이 저장될 폴더 지정
 MEDIA_URL = "/media/"
 
-ALLOWED_HOSTS = "*"  # 설명은 나중에 DEBUG = False를 위해
+ALLOWED_HOSTS = []  # 설명은 나중에 DEBUG = False를 위해
