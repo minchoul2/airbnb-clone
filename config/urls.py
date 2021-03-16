@@ -23,6 +23,9 @@ from rooms import views as room_views
 
 urlpatterns = [  # path(usl , views)
     path("", include("core.urls", namespace="core")),
+    path(
+        "rooms/", include("rooms.urls", namespace="rooms")
+    ),  # room_list.html의 url 태그에 쓰일 namespace room:detail
     path("admin/", admin.site.urls),
 ]
 

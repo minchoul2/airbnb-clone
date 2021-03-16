@@ -1,5 +1,6 @@
 # 파이썬
 from django.db import models  # 쟝고
+from django.urls import reverse  # url name이 필요, retrun url
 from django_countries.fields import CountryField  # 써드파티
 from core import models as core_models  # 사용자패키지
 from users import models as user_models
@@ -112,6 +113,13 @@ class Room(core_models.TimeStampedModel):
         # self.city = str.capitalize(self.city)  # 앞글자를 대문자로
         self.city = self.city.title()  # 모든 단어 첫글자를 대문자로
         super().save(*args, **kwargs)
+
+    # 오버라이딩 한 것
+    # admin에서 view on site 버튼 생성
+    def get_absolute_url(self):
+        return reverse(
+            "rooms:detail", kwargs={"pk": self.pk}
+        )  # namespace(config.url.py):name(rooms.url.py)
 
     # room은 리뷰평균을 가지고 있고 사용자화면에서 보이니까 model에서 정의
     # review 모델에 room이 있기 때문에 room도 리뷰를 가지고 있는 것과 마찬가지다.
