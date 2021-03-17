@@ -25,9 +25,23 @@ class RoomDetail(DetailView):
 def search(request):
     city = request.GET.get("city", "Anywhere")
     city = str.capitalize(city)
+    country = str(request.GET.get("countty", "KR"))
+    room_type = request.GET.get("countty", "0")
     room_types = models.RoomType.objects.all()
+
+    # request로 받은 정보들
+    form = {
+        "city": city,
+        "selected_country": country,
+        "selected_room_type": room_type,
+    }
+    # 데이터베이스에서 오는 정보들
+    choices = {
+        "countries": countries,
+        "room_types": room_types,
+    }
     return render(
         request,
         "rooms/search.html",
-        {"city": city, "countries": countries, "room_types": room_types},
+        {**form, **choices},  # 위 딕셔너리들을 다 풀어 놓을 거야
     )
