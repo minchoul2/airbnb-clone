@@ -25,8 +25,8 @@ class RoomDetail(DetailView):
 def search(request):
     city = request.GET.get("city", "Anywhere")
     city = str.capitalize(city)
-    country = str(request.GET.get("countty", "KR"))
-    room_type = request.GET.get("countty", "0")
+    country = request.GET.get("country", "KR")
+    room_type = int(request.GET.get("room_type", 0))
 
     price = request.GET.get("price", 0)
     guests = request.GET.get("guests", 0)
@@ -42,8 +42,8 @@ def search(request):
     # request로 받은 정보들
     form = {
         "city": city,
-        "selected_country": country,
-        "selected_room_type": room_type,
+        "s_country": country,
+        "s_room_type": room_type,
         "price": price,
         "beds": beds,
         "guests": guests,
@@ -64,8 +64,21 @@ def search(request):
         "amenities": amenities,
         "facilites": facilites,
     }
+
+    filter_args = {}
+    # city 필터
+    if city != "Antwhere":
+        filter_args["city__startswith"] = city
+    # country 필터
+    filter_args["country"] = country
+    # room_type 필터
+    if room_type != 0:
+        filter_args["room_type__pk"] = room_type
+
+    rooms = models.Room.objects.filter(**filter_args)
+
     return render(
         request,
         "rooms/search.html",
-        {**form, **choices},  # 위 딕셔너리들을 다 풀어 놓을 거야
+        {**form, **choices, "rooms": rooms},  # 위 딕셔너리들을 다 풀어 놓을 거야
     )
