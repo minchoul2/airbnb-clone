@@ -21,13 +21,28 @@ Search
 {% for room in rooms %}
 {{room.name}}<br>
 {% endfor %}
-{% if page_obj.has_previous %}
-<a href="?page={{page_obj.previous_page_number}}">Previous</a>
+
+
+{% if rooms.has_previous %}
+<a href="?page={{rooms.previous_page_number}}">Previous</a>
 {% endif %}
 
-Page {{page_obj.number}} for {{page_obj.paginator.num_pages}}
+Page {{rooms.number}} for {{rooms.paginator.num_pages}}
 
 {% if page_obj.has_next %}
 <a href="?page={{page_obj.next_page_number}}">Next</a>
 {% endif %}
+
+
+<h4>
+{% if rooms.has_previous %}
+    <a href="?page={[{rooms.number|add:-1}}">Previous</a>
+{% endif %}
+
+Page {{rooms.number}} of {{rooms.paginator.num_pages}}
+
+{% if rooms.has_next %}
+    <a href="?page={{rooms.number|add:1}}">Next</a>
+{% endif %}
+</h4>
 {% endblock content %}

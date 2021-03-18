@@ -26,6 +26,7 @@ urlpatterns = [  # path(usl , views)
     path(
         "rooms/", include("rooms.urls", namespace="rooms")
     ),  # room_list.html의 url 태그에 쓰일 namespace room:detail
+    path("users/", include("users.urls", namespace="users")),
     path("admin/", admin.site.urls),
 ]
 

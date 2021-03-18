@@ -15,6 +15,7 @@ class HomeView(ListView):
     context_object_name = "rooms"  # object_list 대신 rooms
 
 
+
 class RoomDetail(DetailView):
 
     """RoomDetail Definition"""
