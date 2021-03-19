@@ -7,13 +7,17 @@ class LoginForm(forms.Form):
     email = forms.EmailField()
     password = forms.CharField(widget=forms.PasswordInput())  # 패스워드 별표처리
 
-    def clean_email(self):  # clean 하고싶은 데이터는 "clean_필드명" 으로 하자고 약속 in django
-        email = self.cleaned_data.get("email")  # user가 보낸 데이터에서 email을 갖는 것
+    def clean(self):
+        email = self.cleaned_data.get("email")
+        password = self.cleaned_data.get("password")
         try:
-            models.User.objects.get(username=email)  # User.username 에 email이 있는지 보고
-            return email
-        except models.User.DoesNotExist:
-            raise forms.ValidationError("USer does not exist")  # 정보 없으면 에러
+            user = models.User.objects.get(email=email)
+            if user.check_password(password):
+                return (
+                    self.cleaned_data
+                )  # 이메일, 비밀번호 다 맞으면 확인해보자 # clean()을 쓴다면 항상 cleaned_data를 리턴해줘야함
+            else:
+                self.add_error("password", forms.ValidationError("Password is wrong"))
 
-    def clean_password(self):
-        print("clen ps")
+        except models.User.DoesNotExist:
+            self.add_error("email", forms.ValidationError("User does not exist"))
