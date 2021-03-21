@@ -40,3 +40,15 @@ class SignUpView(FormView):
         "last_name": "min",
         "email": "tls@als.com",
     }
+
+    # form이 유효하다면 form.save를 실행 / 회원가입다하면 로그인
+    def form_valid(self, form):
+        form.save()
+
+        email = form.cleaned_data.get("email")
+        password = form.cleaned_data.get("password")
+        user = authenticate(self.request, username=email, password=password)
+        if user is not None:
+            login(self.request, user)
+
+        return super().form_valid(form)
