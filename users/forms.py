@@ -23,22 +23,17 @@ class LoginForm(forms.Form):
             self.add_error("email", forms.ValidationError("User does not exist"))
 
 
-class SignUpForm(forms.Form):
+# ModelForm : Model에 연결된 Form / 모델에서 변수를 긁어오지 않아도 됨
+# ModelForm이 알아서 clean, save해주기떄문에 메소드 필요없음
+class SignUpForm(forms.ModelForm):
+    class Meta:
+        model = models.User
+        fields = ("first_name", "last_name", "email")
 
-    first_name = forms.CharField(max_length=80)
-    last_name = forms.CharField(max_length=80)
-    email = forms.EmailField()
     password = forms.CharField(widget=forms.PasswordInput())
     password1 = forms.CharField(widget=forms.PasswordInput(), label="Confirm Password")
 
-    def clean_email(self):
-        email = self.cleaned_data.get("email")
-        try:
-            models.User.objects.get(email=email)
-            raise forms.ValidationError("User alreaby exist!!")
-        except models.User.DoesNotExist:
-            return email
-
+    # password랑 맞는지 확인해야하기 떄문에 남겨둠
     def clean_password1(self):
         password = self.cleaned_data.get("password")
         password1 = self.cleaned_data.get("password1")
@@ -48,14 +43,11 @@ class SignUpForm(forms.Form):
         else:
             return password
 
-    def save(self):
-        first_name = self.cleaned_data.get("first_name")
-        last_name = self.cleaned_data.get("last_name")
+    def save(self, *args, **kwargs):
+        user = super().save(commit=False)  # 일단 object는 생성하지만 db에는 적용하지마라
         email = self.cleaned_data.get("email")
-        password = self.cleaned_data.get("password")
-        password1 = self.cleaned_data.get("password1")
-        # username,email,password / 암호화된 비밀번호로 유저생성
-        user = models.User.objects.create_user(email, email=email, password=password)
-        user.first_name = first_name
-        user.last_name = last_name
+        password = self.cleaned_data("password")
+
+        user.username = email
+        user.set_password(password)
         user.save()
