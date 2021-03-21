@@ -28,10 +28,19 @@ class LoginForm(forms.Form):
 class SignUpForm(forms.ModelForm):
     class Meta:
         model = models.User
-        fields = ("first_name", "last_name", "email")
+        fields = ("first_name", "last_name", "email", "birthdate")
 
     password = forms.CharField(widget=forms.PasswordInput())
     password1 = forms.CharField(widget=forms.PasswordInput(), label="Confirm Password")
+
+    # 없으면 동일 이메일 가입시 Integrity Error가 발생해서 임의로 추가해줌
+    def clean_email(self):
+        email = self.cleaned_data.get("email")
+        try:
+            models.User.objects.get(email=email)
+            raise forms.ValidationError("User alreaby exist!!")
+        except models.User.DoesNotExist:
+            return email
 
     # password랑 맞는지 확인해야하기 떄문에 남겨둠
     def clean_password1(self):
@@ -46,7 +55,7 @@ class SignUpForm(forms.ModelForm):
     def save(self, *args, **kwargs):
         user = super().save(commit=False)  # 일단 object는 생성하지만 db에는 적용하지마라
         email = self.cleaned_data.get("email")
-        password = self.cleaned_data("password")
+        password = self.cleaned_data.get("password")
 
         user.username = email
         user.set_password(password)

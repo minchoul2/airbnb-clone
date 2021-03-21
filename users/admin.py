@@ -40,6 +40,7 @@ class CustomUserAdmin(UserAdmin):
         "currency",
         "is_staff",
         "is_superuser",
+        "date_joined",
     )
 
     list_filter = UserAdmin.list_filter + ("superhost",)
